@@ -14,11 +14,26 @@ MARGIN = (WIDTH - (NUM_PLOTS * PLOT_SIZE)) // 2
 SKY = (135, 206, 235)  # sky blue
 SOIL = (101, 67, 33)    # soil brown
 SEED = (60, 40, 20)     # seed brown
+GREEN = (80, 170, 80) # plant green
+PETAL = (255, 130, 170)  # petal pink
+CENTER = (255, 220, 90)  # flower center yellow
+
+STAGE_GROWTH_TIME = 5  # seconds for spending time in each stage before growing
+MAX_STAGE = 3  # number of stages before fully grown
+
 
 class Plant:
     def __init__(self):
         self.stage = 0
-        self.growth_time = 0 #timer
+        self.growth_time = 0.0 #timer
+
+    def update(self, dt): # class method to update the growth of the plant based on time
+        if self.stage < MAX_STAGE: # if the plant is not fully grown
+            self.growth_time += dt # increment the growth time by the time passed since the last update
+            if self.growth_time >= STAGE_GROWTH_TIME: # if the growth time exceeds the threshold for the current stage
+                self.stage += 1 # move to the next stage
+                self.growth_time = 0.0 # reset the growth time for the next stage
+
 
 plots = [None] * NUM_PLOTS # One slot per plot, initialized to None.
 
@@ -40,7 +55,7 @@ while running:
         rect = plot_rect(i)
         pygame.draw.rect(screen, SOIL, rect, border_radius = 8)  # plot
         if plots[i] is not None:
-            pygame.draw.circle(screen, SEED, rect.center, 8)  # seed
+            pygame.draw.circle(screen,SEED, rect.center, 8)  # seed
     pygame.display.flip()
     clock.tick(60)
 
